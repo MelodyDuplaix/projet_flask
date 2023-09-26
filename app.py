@@ -41,7 +41,7 @@ class t_Formulaire_enregistrement_informations(FlaskForm):
         self.connexion = sqlite3.connect("toutroule.db")
         self.curseur = self.connexion.cursor()
         # Récupérez la liste des types de véhicules depuis la base de données
-        resultats = self.curseur.execute("SELECT DISTINCT Type FROM vehicule").fetchall()
+        resultats = self.curseur.execute("SELECT DISTINCT type FROM vehicule").fetchall()
         choix_type_vehicule = [(resultat[0], resultat[0]) for resultat in resultats]
         # Fermez le curseur (vous pouvez garder la connexion ouverte si nécessaire)
         self.curseur.close()
