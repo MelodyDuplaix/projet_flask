@@ -98,10 +98,11 @@ def f_supprimer():
 def f_modifier(): 
     pass 
 
+
 @app.route("/rgpd")
-def f_rgpd(): 
-    pass 
+def f_rgpd():
+    return render_template("t_mentions_legales.html") 
 
 @app.route("/mentions-legales")
-def f_mentions_legales(): 
-    pass 
+def mentions_legales():
+    return render_template("t_mentions_legales.html")
