@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from flask_wtf import FlaskForm 
 from wtforms import StringField, SubmitField, SelectField, IntegerField, validators
 from wtforms.validators import DataRequired
+import sqlite3
 
 # biblothèques de data
 import pandas as pd
@@ -23,14 +24,38 @@ app.config['SECRET_KEY'] = "Ma super clé !"
 def f_index(): 
     return "Home" 
 
-class t_Formulaire_enregistrement_informations(FlaskForm): 
-    wtf_nom = StringField( "Nom*", validators =[DataRequired()]) 
-    wtf_prenom = StringField( "Prenom*", validators =[DataRequired()])
-    wtf_type_vehicule = SelectField( "type de véhicule*", choices=["camion citerne", "camion benne", "camion frigorifique", "camion fourgon"], option_widget=None, validate_choice=True)
+
+
+
+class t_Formulaire_enregistrement_informations(FlaskForm):
+    wtf_nom = StringField("Nom*", validators=[validators.DataRequired()])
+    wtf_prenom = StringField("Prenom*", validators=[validators.DataRequired()])
+    wtf_type_vehicule = SelectField( "type de véhicule*", option_widget=None, validate_choice=True)
     wtf_kilometres_depart = IntegerField("nombre de kilomètres au départ*", [validators.NumberRange(min=0, max=1000000, message="Le nombre de kilomètres ne peut être négatif")])
-    wtf_kilometres_fin = IntegerField("nombre de kilomètres à la fin*",[validators.NumberRange(min=0, max=1000000, message="Le nombre de kilomètres ne peut être négatif")])
-    wtf_commentaire = StringField("Commentaire") 
-    wtf_envoyer = SubmitField( "Envoyer" )
+    wtf_kilometres_fin = IntegerField("nombre de kilomètres à la fin*", [validators.NumberRange(min=0, max=1000000, message="Le nombre de kilomètres ne peut être négatif")])
+    wtf_commentaire = StringField("Commentaire")
+    wtf_envoyer = SubmitField("Envoyer")
+    def __init__(self):
+        super(t_Formulaire_enregistrement_informations, self).__init__()
+        # Créez la connexion à la base de données à l'intérieur de la méthode __init__
+        self.connexion = sqlite3.connect("toutroule.db")
+        self.curseur = self.connexion.cursor()
+        # Récupérez la liste des types de véhicules depuis la base de données
+        resultats = self.curseur.execute("SELECT DISTINCT Type FROM vehicule").fetchall()
+        choix_type_vehicule = [(resultat[0], resultat[0]) for resultat in resultats]
+        # Fermez le curseur (vous pouvez garder la connexion ouverte si nécessaire)
+        self.curseur.close()
+        # Définissez les choix du champ SelectField
+        self.wtf_type_vehicule.choices = choix_type_vehicule
+
+
+
+
+
+
+
+
+    
 
 
 @app.route("/formulaire-saisie", methods=["GET", "POST"])
