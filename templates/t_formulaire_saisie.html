@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>formulaire d'inscription</title>
+</head>
+<body>
+    <H1>Formulaire d'enregistrement d'un intervenant</H1> 
+    <p>* : champs obligatoires</p>
+    <form method="POST"> 
+        {{ html_formulaire.hidden_tag()}} 
+        {{ html_formulaire.wtf_nom.label }} 
+        {{ html_formulaire.wtf_nom() }} 
+        <br/> 
+        {{ html_formulaire.hidden_tag()}} 
+        {{ html_formulaire.wtf_prenom.label }} 
+        {{ html_formulaire.wtf_prenom() }} 
+        <br/> 
+        {{ html_formulaire.hidden_tag()}} 
+        {{ html_formulaire.wtf_type_vehicule.label }} 
+        {{ html_formulaire.wtf_type_vehicule() }} 
+        <br/> 
+        {{ html_formulaire.hidden_tag()}} 
+        {{ html_formulaire.wtf_kilometres_depart.label }} 
+        {{ html_formulaire.wtf_kilometres_depart() }} 
+        <br/> 
+        {{ html_formulaire.hidden_tag()}} 
+        {{ html_formulaire.wtf_kilometres_fin.label }} 
+        {{ html_formulaire.wtf_kilometres_fin() }} 
+        <br/> 
+        {{ html_formulaire.hidden_tag()}} 
+        {{ html_formulaire.wtf_commentaire.label }} 
+        {{ html_formulaire.wtf_commentaire() }} 
+        <br/> 
+        {{ html_formulaire.wtf_envoyer()}} 
+    </form>
+</body>
+</html>

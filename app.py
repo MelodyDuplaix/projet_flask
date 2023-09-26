@@ -50,14 +50,6 @@ class t_Formulaire_enregistrement_informations(FlaskForm):
 
 
 
-
-
-
-
-
-    
-
-
 @app.route("/formulaire-saisie", methods=["GET", "POST"])
 def f_formulaire_saisie(): 
  f_formulaire = t_Formulaire_enregistrement_informations()
@@ -77,6 +69,7 @@ def f_formulaire_saisie():
  return render_template("t_formulaire_saisie.html" ,
                           t_titre = "Formulaire de saisie",
                           html_formulaire = f_formulaire) 
+
 
 @app.route("/ajout-salarie")
 def f_ajout_salarie(): 
