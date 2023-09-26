@@ -18,3 +18,36 @@ app.config["CACHE_TYPE"] = "null"
 @app.route("/") # méthode qui permet de créer des pages web
 def f_index(): 
     return "" 
+
+
+@app.route("/formulaire-saisie")
+def f_formulaire_saisie(): 
+    pass 
+
+@app.route("/ajout-salarie")
+def f_ajout_salarie(): 
+    pass 
+
+@app.route("/ajout-vehicule")
+def f_ajout_vehicule(): 
+    pass 
+
+@app.route("/visualiser-donnees")
+def f_visualiser_donnees(): 
+    pass 
+
+@app.route("/supprimer")
+def f_supprimer(): 
+    pass 
+
+@app.route("/modifier")
+def f_modifier(): 
+    pass 
+
+@app.route("/rgpd")
+def f_rgpd(): 
+    pass 
+
+@app.route("/mentions-legales")
+def f_mentions_legales(): 
+    pass 
