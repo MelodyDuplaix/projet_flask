@@ -1,5 +1,5 @@
 # bibliothèques pour flask
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_wtf import FlaskForm 
 from wtforms import StringField, SubmitField, SelectField, IntegerField, validators
 from wtforms.validators import DataRequired
@@ -41,12 +41,13 @@ class t_Formulaire_enregistrement_informations(FlaskForm):
         self.connexion = sqlite3.connect("toutroule.db")
         self.curseur = self.connexion.cursor()
         # Récupérez la liste des types de véhicules depuis la base de données
-        resultats = self.curseur.execute("SELECT DISTINCT type FROM vehicule").fetchall()
-        choix_type_vehicule = [(resultat[0], resultat[0]) for resultat in resultats]
-        # Fermez le curseur (vous pouvez garder la connexion ouverte si nécessaire)
-        self.curseur.close()
+        resultats_vehicule = self.curseur.execute("SELECT DISTINCT type FROM vehicule").fetchall()
+        choix_type_vehicule = [(resultat[0], resultat[0]) for resultat in resultats_vehicule]
         # Définissez les choix du champ SelectField
         self.wtf_type_vehicule.choices = choix_type_vehicule
+        # Fermez le curseur (vous pouvez garder la connexion ouverte si nécessaire)
+        self.curseur.close()
+        
 
 
 
@@ -54,18 +55,28 @@ class t_Formulaire_enregistrement_informations(FlaskForm):
 def f_formulaire_saisie(): 
  f_formulaire = t_Formulaire_enregistrement_informations()
  if f_formulaire.validate_on_submit():
-    f_reponse_formulaire = {
-        "nom":f_formulaire.wtf_nom.data,
-        "prenom":f_formulaire.wtf_prenom.data,
-        "type_vehicule":f_formulaire.wtf_type_vehicule.data,
-        "kilometres_depart":f_formulaire.wtf_kilometres_depart.data,
-        "kilometres_fin":f_formulaire.wtf_kilometres_fin.data,
-        "commentaire":f_formulaire.wtf_commentaire.data
-    }
-    for formulaires in f_formulaire:
-        formulaires.data = ""
-    return render_template("t_formulaire_saisie_confirmation.html",
-                           t_reponse_formulaire = f_reponse_formulaire)
+    try:
+        connexion = sqlite3.connect("toutroule.db")
+        curseur = connexion.cursor()
+        f_nom= "Mer"
+        f_prenom= "Lou"
+        f_type_vehicule= "camion citerne"
+        f_kilometres_depart = 5
+        f_kilometres_fin= 10
+        f_commentaire= ""
+        id_vehicule = curseur.execute(f"SELECT id_vehicule FROM vehicule WHERE type == '{f_type_vehicule}'").fetchone()[0]
+        id_chauffeur = curseur.execute(f"SELECT id_chauffeur FROM chauffeurs WHERE nom=='{f_nom}' and prenom=='{f_prenom}' ").fetchone()[0]
+        curseur.execute("INSERT INTO trajets (km_fin,km_debut,commentaire,id_vehicule,id_chauffeur) VALUES (?, ?, ?, ?, ?)", (f_kilometres_fin, f_kilometres_depart, f_commentaire, id_vehicule, id_chauffeur))
+        connexion.commit()
+        f_message = "Enregistrement inscrit dans la base."
+    except:
+        connexion.rollback()
+        f_message = "Un problème est survenu pendant l'enregistrement."
+    finally:
+        connexion.close()
+        return render_template("t_formulaire_saisie_confirmation.html",
+                        t_nom = f_nom, t_prenom=f_prenom, t_type_vehicule=f_type_vehicule, t_kilometres_depart = f_kilometres_depart, t_kilometres_fin = f_kilometres_fin, 
+                        t_commentaire = f_commentaire, t_id_vehicule = id_vehicule, t_id_chauffeur = id_chauffeur, t_message = f_message)
  return render_template("t_formulaire_saisie.html" ,
                           t_titre = "Formulaire de saisie",
                           html_formulaire = f_formulaire) 
@@ -75,9 +86,27 @@ def f_formulaire_saisie():
 def f_ajout_salarie(): 
     pass 
 
-@app.route("/ajout-vehicule")
-def f_ajout_vehicule(): 
-    pass 
+# Liste des types de véhicules disponibles
+types_vehicules = ["camion citerne", "camion frigorifique", "camion fourgon"]
+# Route pour afficher le formulaire d'ajout de véhicule
+@app.route('/ajout-vehicule', methods=['POST', 'GET'])
+def f_ajout_vehicule():
+    if request.method == 'POST':
+        try:
+            v_id = request.form['wtf_id']
+            v_type = request.form['wtf_type']
+            connexion = sqlite3.connect("toutroule.db")
+            curseur = connexion.cursor()
+            curseur.execute("INSERT INTO vehicule (id_vehicule, type) VALUES (?, ?)", (v_id, v_type))
+            connexion.commit()
+            f_message = "Enregistrement inscrit dans la base."
+        except:
+            connexion.rollback()
+            f_message = "Un problème est survenu pendant l'enregistrement."
+        finally:
+            connexion.close()
+            return render_template("ajout-vehicule.html", t_message=f_message)
+    return render_template("ajout-vehicule.html", types_vehicules=types_vehicules)
 
 @app.route("/visualiser-donnees")
 def f_visualiser_donnees(): 
