@@ -86,9 +86,26 @@ def f_formulaire_saisie():
                             html_formulaire = f_formulaire) 
 
 
-@app.route("/ajout-salarie")
-def f_ajout_salarie(): 
-    pass 
+class c_ajout_salarie(FlaskForm):
+  wtf_nom = StringField("Nom", validators=[DataRequired()])
+  wtf_prenom = StringField("Prénom", validators=[DataRequired()])
+  wtf_genre = SelectField("Genre", choices=["M","F","NB"])
+  wtf_envoyer = SubmitField("Envoyer")
+
+@app.route("/ajout-salarie", methods=["GET", "POST"])
+def f_enregistrer_informations():
+ f_formulaire = c_ajout_salarie()
+ if f_formulaire.validate_on_submit():
+    f_nom = f_formulaire.wtf_nom.data
+    f_formulaire.wtf_nom.data = ""
+    f_prenom = f_formulaire.wtf_prenom.data
+    f_formulaire.wtf_prenom.data = ""
+    f_genre = f_formulaire.wtf_genre.data
+    f_formulaire.wtf_genre.data = ""
+ return render_template("t_ajout-salarie.html" ,
+                          t_titre = "Formulaire d'ajouter un salarié",
+                          html_formulaire = f_formulaire)
+
 
 # Liste des types de véhicules disponibles
 types_vehicules = ["camion citerne", "camion frigorifique", "camion fourgon"]
