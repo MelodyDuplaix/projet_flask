@@ -59,28 +59,29 @@ def f_formulaire_saisie():
     # table_chauffeurs = curseur.execute("SELECT nom, prenom FROM chauffeurs")
     table_chauffeurs = pd.read_sql_query("SELECT nom, prenom FROM chauffeurs", connexion)
     if f_formulaire.validate_on_submit():
-            try:
-                connexion = sqlite3.connect("toutroule.db")
-                curseur = connexion.cursor()
-                f_nom= f_formulaire.wtf_nom.data
-                f_prenom= f_formulaire.wtf_prenom.data
-                f_type_vehicule= f_formulaire.wtf_type_vehicule.data
-                f_kilometres_depart = f_formulaire.wtf_kilometres_depart.data
-                f_kilometres_fin= f_formulaire.wtf_kilometres_fin.data
-                f_commentaire= f_formulaire.wtf_commentaire.data
-                id_vehicule = curseur.execute(f"SELECT id_vehicule FROM vehicule WHERE type == '{f_type_vehicule}'").fetchone()[0]
-                id_chauffeur = curseur.execute(f"SELECT id_chauffeur FROM chauffeurs WHERE nom=='{f_nom}' and prenom=='{f_prenom}' ").fetchone()[0]
-                curseur.execute("INSERT INTO trajets (km_fin,km_debut,commentaire,id_vehicule,id_chauffeur) VALUES (?, ?, ?, ?, ?)", (f_kilometres_fin, f_kilometres_depart, f_commentaire, id_vehicule, id_chauffeur))
-                connexion.commit()
-                f_message = "Enregistrement inscrit dans la base."
-            except:
-                connexion.rollback()
-                f_message = "Un problème est survenu pendant l'enregistrement."
-            finally:
-                connexion.close()
-                return render_template("t_formulaire_saisie_confirmation.html",
-                                t_nom = f_nom, t_prenom=f_prenom, t_type_vehicule=f_type_vehicule, t_kilometres_depart = f_kilometres_depart, t_kilometres_fin = f_kilometres_fin, 
-                                t_commentaire = f_commentaire, t_id_vehicule = id_vehicule, t_id_chauffeur = id_chauffeur, t_message = f_message)
+        try:
+            connexion = sqlite3.connect("toutroule.db")
+            curseur = connexion.cursor()
+            f_nom= f_formulaire.wtf_nom.data
+            f_prenom= f_formulaire.wtf_prenom.data
+            f_type_vehicule= f_formulaire.wtf_type_vehicule.data
+            f_kilometres_depart = f_formulaire.wtf_kilometres_depart.data
+            f_kilometres_fin= f_formulaire.wtf_kilometres_fin.data
+            f_commentaire= f_formulaire.wtf_commentaire.data
+            id_vehicule = curseur.execute(f"SELECT id_vehicule FROM vehicule WHERE type == '{f_type_vehicule}'").fetchone()[0]
+            id_chauffeur = curseur.execute(f"SELECT id_chauffeur FROM chauffeurs WHERE nom=='{f_nom}' and prenom=='{f_prenom}' ").fetchone()[0]
+            curseur.execute("INSERT INTO trajets (km_fin,km_debut,commentaire,id_vehicule,id_chauffeur) VALUES (?, ?, ?, ?, ?)", (f_kilometres_fin, f_kilometres_depart, f_commentaire, id_vehicule, id_chauffeur))
+            connexion.commit()
+            f_message = "Enregistrement inscrit dans la base."
+            return render_template("t_formulaire_saisie_confirmation.html",
+                t_nom = f_nom, t_prenom=f_prenom, t_type_vehicule=f_type_vehicule, t_kilometres_depart = f_kilometres_depart, t_kilometres_fin = f_kilometres_fin, 
+                t_commentaire = f_commentaire, t_id_vehicule = id_vehicule, t_id_chauffeur = id_chauffeur, t_message = f_message)
+        except:
+            connexion.rollback()
+            f_message = "Un problème est survenu pendant l'enregistrement."
+            return render_template("t_formulaire_saisie_confirmation.html", t_message = f_message)
+        finally:
+            connexion.close()
     return render_template("t_formulaire_saisie.html" ,
                             t_titre = "Formulaire de saisie",
                             html_formulaire = f_formulaire) 
