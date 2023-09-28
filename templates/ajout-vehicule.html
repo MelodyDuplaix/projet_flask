@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ajouter un véhicule</h1>
+    {% if t_message %}
+    <p>{{ t_message }}</p>
+    {% endif %}
+    <form method="POST" action="/ajout-vehicule">
+        <label for="wtf_id">ID du véhicule:</label>
+        <input type="text" id="wtf_id" name="wtf_id" required><br><br>
+        <label for="wtf_type">Type de véhicule:</label>
+        <select id="wtf_type" name="wtf_type" required>
+            <option value="" disabled selected>-- Sélectionnez un type de véhicule --</option>
+            {% for type in types_vehicules %}
+            <option value="{{ type }}"> {{ type }} </option>
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" value="Ajouter">
+    </form>
+    <br>
+    <a href="/visualiser-donnees">Voir la liste des véhicules</a>
+</body>
+</html>

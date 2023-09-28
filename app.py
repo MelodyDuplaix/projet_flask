@@ -174,7 +174,37 @@ def f_visualiser_donnees():
     taille_df_vehicule = table_vehicule.shape[0]
     return render_template("t_visualiser_donnees.html", t_chauffeurs = df_chauffeurs, t_vehicule = table_vehicule, t_taille_df_chauffeur = taille_df_chauffeur, t_taille_df_vehicule=taille_df_vehicule)
 
-
+@app.route('/supprimer-vehicule', methods=['POST', 'GET'])
+def supprimer_vehicule():
+    f_message = ""
+    types_vehicules = []
+    try:
+        connexion = sqlite3.connect("toutroule.db")
+        curseur = connexion.cursor()
+        # Récupérer tous les types de véhicules
+        curseur.execute("SELECT DISTINCT type FROM vehicule")
+        types_vehicules = [row[0] for row in curseur.fetchall()]
+    except Exception as e:
+        print(str(e))
+    finally:
+        connexion.close()
+    if request.method == 'POST':
+        type_choisi = request.form.get('type_choisi')
+        if type_choisi:
+            try:
+                connexion = sqlite3.connect("toutroule.db")
+                curseur = connexion.cursor()
+                # Supprimer le véhicule en fonction du type choisi
+                curseur.execute("DELETE FROM vehicule WHERE type=?", (type_choisi,))
+                connexion.commit()
+                f_message = "Véhicule(s) supprimé(s) avec succès."
+            except Exception as e:
+                print(str(e))
+                connexion.rollback()
+                f_message = "Un problème est survenu lors de la suppression du véhicule."
+            finally:
+                connexion.close()
+    return render_template("t_supprimer_vehicule.html", t_titre="Supprimer un type de véhicule", t_message=f_message, types_vehicules=types_vehicules)
 
 
 @app.route("/supprimer")
