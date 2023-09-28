@@ -2,6 +2,7 @@ import plotly.graph_objects as go
 import json
 import plotly
 import sqlite3
+import pandas as pd
 
 #===============================================================
 #Récupérer toutes les tables
@@ -13,7 +14,7 @@ def calcul_km_parcouru (df):
     return df
 
 def requetes_tables_transformation_dataframe():
-    con = sqlite3.connect('Tout_roule.db')
+    con = sqlite3.connect('toutroule.db')
     cursor = con.cursor()
     cursor.execute('''SELECT
         c.id_chauffeur,
@@ -29,7 +30,7 @@ def requetes_tables_transformation_dataframe():
     FROM
         trajets as t
         JOIN chauffeurs as c ON t.id_chauffeur = c.id_chauffeur
-        JOIN vehicule as v ON t.id_vehicule = v.id_vehicule''')  
+        JOIN vehicules as v ON t.id_vehicule = v.id_vehicule''')  
 #===============================================================
 # Récupérez toutes les lignes dans un DataFrame
     df = pd.DataFrame(cursor.fetchall(), columns=[  
@@ -58,7 +59,7 @@ def requetes_tables_transformation_dataframe():
 #Afficher le nom et le prénom des chauffeurs
 
 def afficher_nom_prenom_chauffeurs(df):
-    df_identite = df[["nom", "prenom",'genre']]
+    df_identite = df[["nom", "prenom",'genre']].drop_duplicates()
     return df_identite
 
 #pour appeler la fonction c'est: afficher_nom_prenom_chauffeurs(df)

@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired
 import sqlite3
 from lib.utils import *
 from lib.database import *
+from lib.analyses import *
 
 # biblothèques de data
 import pandas as pd
@@ -21,10 +22,20 @@ app = Flask(__name__) # app est le nom du fichier obligatoirement, on lui attrib
 app.config["CACHE_TYPE"] = "null"
 app.config['SECRET_KEY'] = "Ma super clé !"
 
+
+
 # première page
 @app.route("/") # méthode qui permet de créer des pages web
-def f_index(): 
-    return "Home" 
+def f_index():
+    df= requetes_tables_transformation_dataframe()
+    v_afficher_nombres_chauffeurs = afficher_nombre_chauffeurs(df)
+    v_afficher_nom_prenom = afficher_nom_prenom_chauffeurs(df)
+    v_nb_de_km_parcouru_total = nb_de_km_parcouru_total(df)
+    v_graphique = graphique(df)
+    return render_template("t_analyses.html", t_afficher_nombres_chauffeurs = v_afficher_nombres_chauffeurs,
+                                        t_afficher_nom_prenom = v_afficher_nom_prenom,
+                                        t_nb_de_km_parcouru_total = v_nb_de_km_parcouru_total,
+                                        t_graphique = v_graphique)
 
 
 

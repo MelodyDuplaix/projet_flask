@@ -1,7 +1,14 @@
 .green{
-    background-color: rgba(148, 245, 12, 0.345);
+    background-color: rgba(148, 245, 12, 0.258) !important;
 }
 
 .blue{
-    background-color: rgba(0, 0, 255, 0.384);
+    background-color: rgba(0, 0, 255, 0.296) !important;
+}
+.table {
+    width: 50%; 
+    justify-content: center; 
+    margin-left: auto; 
+    margin-right: auto; 
+    text-align:center;
 }

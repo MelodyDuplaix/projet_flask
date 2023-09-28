@@ -10,7 +10,7 @@
     <p>Nombres de chauffeurs : {{ t_afficher_nombres_chauffeurs }}</p>
     <p>Nom et prénom des chauffeurs : {{ t_afficher_nom_prenom }}</p>
 
-    <table class="table table-striped table-hover table-bordered">
+    <table class="table table-striped table-hover table-bordered align-middle">
         <thead>
             <tr>
                 <th>nom</th>
@@ -25,10 +25,10 @@
                 <td class=green>{{ row["prenom"] }}</td>
                 {%endif%}
                 <tr>
-                    {% if row["genre"] =="M" %}
-                    <td class=blue>{{ row["nom"] }}</td>
-                    <td class=blue>{{ row["prenom"] }}</td>
-                    {%endif%}
+                {% if row["genre"] =="M" %}
+                <td class=blue>{{ row["nom"] }}</td>
+                <td class=blue>{{ row["prenom"] }}</td>
+                {%endif%}
             </tr>
             {% endfor %}
         </tbody>
