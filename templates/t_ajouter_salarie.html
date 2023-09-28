@@ -21,12 +21,12 @@
           {{ html_formulaire.wtf_prenom.label(class="form-label") }}
           {{ html_formulaire.wtf_prenom(class="form-control") }}
           <br/>
-          <div class="mb-3"style="width: 20%;">
-          {{ html_formulaire.wtf_genre.label }}
-          {{ html_formulaire.wtf_genre() }}
-        </div>
+          <div class="mb-3"style="width: 100%;">
+            {{ html_formulaire.wtf_genre.label }}
+            {{ html_formulaire.wtf_genre(class="form-select") }}
+          </div>
           <br/>
-          {{ html_formulaire.wtf_envoyer()}}
+          {{ html_formulaire.wtf_envoyer( class="btn btn-primary")}}
         </div>
       </form>
 </body>
