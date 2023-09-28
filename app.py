@@ -84,25 +84,42 @@ def f_formulaire_saisie():
 
 
 
-class c_ajout_salarie(FlaskForm):
-  wtf_nom = StringField("Nom", validators=[DataRequired()])
-  wtf_prenom = StringField("Prénom", validators=[DataRequired()])
-  wtf_genre = SelectField("Genre", choices=["M","F","NB"])
-  wtf_envoyer = SubmitField("Envoyer")
+# class pour contrôler le formulaire d'ajout de salarié
+class c_ajouter_salarie(FlaskForm):
+    # Liste des types de véhicules disponibles
+    wtf_nom = StringField("Nom", validators=[DataRequired()])
+    wtf_prenom = StringField("Prénom", validators=[DataRequired()])
+    wtf_genre = SelectField("Genre", choices=["M","F","NB"])
+    wtf_envoyer = SubmitField("Envoyer")
 
-@app.route("/ajout-salarie", methods=["GET", "POST"])
-def f_enregistrer_informations():
- f_formulaire = c_ajout_salarie()
- if f_formulaire.validate_on_submit():
-    f_nom = f_formulaire.wtf_nom.data
-    f_formulaire.wtf_nom.data = ""
-    f_prenom = f_formulaire.wtf_prenom.data
-    f_formulaire.wtf_prenom.data = ""
-    f_genre = f_formulaire.wtf_genre.data
-    f_formulaire.wtf_genre.data = ""
- return render_template("t_ajout-salarie.html" ,
-                          t_titre = "Formulaire d'ajouter un salarié",
-                          html_formulaire = f_formulaire)
+ # # Route pour afficher le formulaire d'ajout de salarié
+@app.route('/ajouter-salarie', methods=['POST', 'GET'])
+def f_ajouter_salarie():
+    f_formulaire = c_ajouter_salarie()
+    f_message = ""
+    # transmission des données vers le formulaire
+    if f_formulaire.validate_on_submit():
+        f_nom = f_formulaire.wtf_nom.data
+        f_formulaire.wtf_nom.data = ""
+        f_prenom = f_formulaire.wtf_prenom.data
+        f_formulaire.wtf_prenom.data = ""
+        f_genre = f_formulaire.wtf_genre.data
+        f_formulaire.wtf_genre.data = ""
+        try:
+            connexion = sqlite3.connect("toutroule.db")
+            curseur = connexion.cursor()
+            curseur.execute("INSERT INTO chauffeurs (nom, prenom, genre) VALUES (?, ?, ?)", (f_nom, f_prenom, f_genre))
+            connexion.commit()
+            f_message = "Enregistrement inscrit dans la base."
+        except Exception as e:
+            print(str(e))
+            connexion.rollback()
+            f_message = "Un problème est survenu pendant l'enregistrement."
+        finally:
+            connexion.close()
+    return render_template("t_ajouter_salarie.html", t_titre="Ajouter un salarié", html_formulaire=f_formulaire)
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 # Liste des types de véhicules disponibles
