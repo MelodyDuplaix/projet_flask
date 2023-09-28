@@ -1,7 +1,7 @@
 # bibliothèques pour flask
 from flask import Flask, render_template, request
 from flask_wtf import FlaskForm 
-from wtforms import StringField, SubmitField, SelectField, IntegerField, validators
+from wtforms import StringField, SubmitField, SelectField, IntegerField, validators, ValidationError
 from wtforms.validators import DataRequired
 import sqlite3
 from lib.utils import *
@@ -29,6 +29,11 @@ def f_index():
 
 
 
+
+
+
+
+
 class t_Formulaire_enregistrement_informations(FlaskForm):
     wtf_nom = StringField("Nom*", validators=[validators.DataRequired()])
     wtf_prenom = StringField("Prenom*", validators=[validators.DataRequired()])
@@ -43,15 +48,13 @@ class t_Formulaire_enregistrement_informations(FlaskForm):
         self.connexion = sqlite3.connect("toutroule.db")
         self.curseur = self.connexion.cursor()
         # Récupérez la liste des types de véhicules depuis la base de données
-        resultats_vehicule = self.curseur.execute("SELECT DISTINCT type FROM vehicule").fetchall()
+        resultats_vehicule = self.curseur.execute("SELECT DISTINCT type FROM vehicules").fetchall()
         choix_type_vehicule = [(resultat[0], resultat[0]) for resultat in resultats_vehicule]
         # Définissez les choix du champ SelectField
         self.wtf_type_vehicule.choices = choix_type_vehicule
         # Fermez le curseur (vous pouvez garder la connexion ouverte si nécessaire)
         self.curseur.close()
         
-
-
 
 @app.route("/formulaire-saisie", methods=["GET", "POST"])
 def f_formulaire_saisie(): 
@@ -78,6 +81,8 @@ def f_formulaire_saisie():
     return render_template("t_formulaire_saisie.html" ,
                             t_titre = "Formulaire de saisie",
                             html_formulaire = f_formulaire) 
+
+
 
 
 class c_ajout_salarie(FlaskForm):
