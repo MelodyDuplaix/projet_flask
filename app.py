@@ -122,27 +122,35 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-# Liste des types de véhicules disponibles
-types_vehicules = ["camion citerne", "camion frigorifique", "camion fourgon"]
+# class pour contrôler le formulaire d'ajout de véhicule
+class c_ajouter_vehicule(FlaskForm):
+    # Liste des types de véhicules disponibles
+    wtf_type = StringField("Nouveau type de véhicule", validators=[DataRequired()])
+    wtf_ajouter = SubmitField("Ajouter")
 # Route pour afficher le formulaire d'ajout de véhicule
-@app.route('/ajout-vehicule', methods=['POST', 'GET'])
-def f_ajout_vehicule():
-    if request.method == 'POST':
+@app.route('/ajouter-vehicule', methods=['POST', 'GET'])
+def f_ajouter_vehicule():
+    f_formulaire = c_ajouter_vehicule()
+    f_message = ""
+    # transmission des données vers le formulaire
+    if f_formulaire.validate_on_submit():
+        f_type = f_formulaire.wtf_type.data
+        f_formulaire.wtf_type.data = ""
         try:
-            v_id = request.form['wtf_id']
-            v_type = request.form['wtf_type']
             connexion = sqlite3.connect("toutroule.db")
             curseur = connexion.cursor()
-            curseur.execute("INSERT INTO vehicule (id_vehicule, type) VALUES (?, ?)", (v_id, v_type))
+            curseur.execute("INSERT INTO vehicules (type) VALUES (?)", (f_type,))
             connexion.commit()
             f_message = "Enregistrement inscrit dans la base."
-        except:
+        except Exception as e:
+            print(str(e))
             connexion.rollback()
             f_message = "Un problème est survenu pendant l'enregistrement."
         finally:
             connexion.close()
-            return render_template("ajout-vehicule.html", t_message=f_message)
-    return render_template("ajout-vehicule.html", types_vehicules=types_vehicules)
+    return render_template("t_ajouter_vehicule.html", t_titre="Ajouter un type de véhicule", html_formulaire=f_formulaire)
+if __name__ == "__main__":
+    app.run(debug=True)
 
 @app.route("/visualiser-donnees")
 def f_visualiser_donnees(): 
