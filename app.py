@@ -84,6 +84,9 @@ def f_formulaire_saisie():
 
 
 
+
+
+
 # class pour contrôler le formulaire d'ajout de salarié
 class c_ajouter_salarie(FlaskForm):
     # Liste des types de véhicules disponibles
@@ -122,6 +125,10 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
+
+
+
+
 # class pour contrôler le formulaire d'ajout de véhicule
 class c_ajouter_vehicule(FlaskForm):
     # Liste des types de véhicules disponibles
@@ -152,6 +159,13 @@ def f_ajouter_vehicule():
 if __name__ == "__main__":
     app.run(debug=True)
 
+
+
+
+
+
+
+
 @app.route("/visualiser-donnees")
 def f_visualiser_donnees(): 
     df_chauffeurs = recuperer_table_chauffeur()
@@ -159,6 +173,9 @@ def f_visualiser_donnees():
     table_vehicule = recuperer_table_vehicule()
     taille_df_vehicule = table_vehicule.shape[0]
     return render_template("t_visualiser_donnees.html", t_chauffeurs = df_chauffeurs, t_vehicule = table_vehicule, t_taille_df_chauffeur = taille_df_chauffeur, t_taille_df_vehicule=taille_df_vehicule)
+
+
+
 
 @app.route("/supprimer")
 def f_supprimer(): 
