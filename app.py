@@ -182,7 +182,7 @@ def supprimer_vehicule():
         connexion = sqlite3.connect("toutroule.db")
         curseur = connexion.cursor()
         # Récupérer tous les types de véhicules
-        curseur.execute("SELECT DISTINCT type FROM vehicule")
+        curseur.execute("SELECT DISTINCT type FROM vehicules")
         types_vehicules = [row[0] for row in curseur.fetchall()]
     except Exception as e:
         print(str(e))
@@ -195,7 +195,7 @@ def supprimer_vehicule():
                 connexion = sqlite3.connect("toutroule.db")
                 curseur = connexion.cursor()
                 # Supprimer le véhicule en fonction du type choisi
-                curseur.execute("DELETE FROM vehicule WHERE type=?", (type_choisi,))
+                curseur.execute("DELETE FROM vehicules WHERE type=?", (type_choisi,))
                 connexion.commit()
                 f_message = "Véhicule(s) supprimé(s) avec succès."
             except Exception as e:
@@ -218,7 +218,7 @@ def f_modifier():
 
 @app.route("/rgpd")
 def f_rgpd():
-    return render_template("t_mentions_legales.html") 
+    return render_template("t_rgpd.html") 
 
 @app.route("/mentions-legales")
 def mentions_legales():

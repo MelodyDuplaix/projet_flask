@@ -1,54 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="static/css/style_global.css">
-    <title>formulaire d'inscription</title>
-</head>
-<body>
-    <H1>Formulaire d'enregistrement d'un intervenant</H1> 
-    <p>* : champs obligatoires</p>
-    <form method="POST"> 
-        <div class="mb-3"style="width: 20%;">
-        {{ html_formulaire.hidden_tag()}} 
-        {{ html_formulaire.wtf_nom.label(class="form-label") }} 
-        {{ html_formulaire.wtf_nom(class="form-control") }} 
-        </div>  
-        <br/> 
-        <div class="mb-3"style="width: 20%;">
-        {{ html_formulaire.hidden_tag()}} 
-        {{ html_formulaire.wtf_prenom.label(class="form-label") }} 
-        {{ html_formulaire.wtf_prenom(class="form-control") }} 
-        </div>
-        <br/> 
-        <div class="mb-3"style="width: 20%;">
-        {{ html_formulaire.hidden_tag()}} 
-        {{ html_formulaire.wtf_type_vehicule.label(class="form-label") }} 
-        {{ html_formulaire.wtf_type_vehicule(class="form-control") }} 
-        </div>
-        <br/>
-        <div class="mb-3"style="width: 20%;">
-        {{ html_formulaire.hidden_tag()}} 
-        {{ html_formulaire.wtf_kilometres_depart.label(class="form-label") }} 
-        {{ html_formulaire.wtf_kilometres_depart(class="form-control") }} 
-        </div>
-        <br/> 
-        <div class="mb-3"style="width: 20%;">
-        {{ html_formulaire.hidden_tag()}} 
-        {{ html_formulaire.wtf_kilometres_fin.label(class="form-label") }} 
-        {{ html_formulaire.wtf_kilometres_fin(class="form-control") }} 
-        </div>
-        <br/> 
-        <div class="mb-3"style="width: 20%;">
-        {{ html_formulaire.hidden_tag()}} 
-        {{ html_formulaire.wtf_commentaire.label(class="form-label") }} 
-        {{ html_formulaire.wtf_commentaire(class="form-control") }} 
-        <br/> 
-        </div>
-        {{ html_formulaire.wtf_envoyer( class="btn btn-primary")}} 
-    </form>
-</body>
-</html>
+{% extends "t_base.html" %}
+
+{% block title %}formulaire d'inscription{% endblock %}
+{% set styles = "static/css/style_global.css" %}
+
+{% block content %}
+<H1>Formulaire d'enregistrement d'un intervenant</H1> 
+<p>* : champs obligatoires</p>
+<form method="POST"> 
+    <div class="mb-3"style="width: 20%;">
+    {{ html_formulaire.hidden_tag()}} 
+    {{ html_formulaire.wtf_nom.label(class="form-label") }} 
+    {{ html_formulaire.wtf_nom(class="form-control") }} 
+    </div>  
+    <br/> 
+    <div class="mb-3"style="width: 20%;">
+    {{ html_formulaire.hidden_tag()}} 
+    {{ html_formulaire.wtf_prenom.label(class="form-label") }} 
+    {{ html_formulaire.wtf_prenom(class="form-control") }} 
+    </div>
+    <br/> 
+    <div class="mb-3"style="width: 20%;">
+    {{ html_formulaire.hidden_tag()}} 
+    {{ html_formulaire.wtf_type_vehicule.label(class="form-label") }} 
+    {{ html_formulaire.wtf_type_vehicule(class="form-control") }} 
+    </div>
+    <br/>
+    <div class="mb-3"style="width: 20%;">
+    {{ html_formulaire.hidden_tag()}} 
+    {{ html_formulaire.wtf_kilometres_depart.label(class="form-label") }} 
+    {{ html_formulaire.wtf_kilometres_depart(class="form-control") }} 
+    </div>
+    <br/> 
+    <div class="mb-3"style="width: 20%;">
+    {{ html_formulaire.hidden_tag()}} 
+    {{ html_formulaire.wtf_kilometres_fin.label(class="form-label") }} 
+    {{ html_formulaire.wtf_kilometres_fin(class="form-control") }} 
+    </div>
+    <br/> 
+    <div class="mb-3"style="width: 20%;">
+    {{ html_formulaire.hidden_tag()}} 
+    {{ html_formulaire.wtf_commentaire.label(class="form-label") }} 
+    {{ html_formulaire.wtf_commentaire(class="form-control") }} 
+    <br/> 
+    </div>
+    {{ html_formulaire.wtf_envoyer( class="btn btn-primary")}} 
+</form>
+{% endblock %}

@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ t_titre }}</title>
-</head>
-<body>
-    <h1>{{ t_titre }}</h1>
-    <p>{{ t_message }}</p>
-    <form method="POST" action="">
-        {{ csrf_token }}
-        <label for="type_choisi">Sélectionnez le type de véhicule à supprimer :</label>
-        <select name="type_choisi" id="type_choisi">
-            {% for type in types_vehicules %}
-                <option value="{{ type }}">{{ type }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Supprimer</button>
-    </form>
-</body>
-</html>
+{% extends "t_base.html" %}
+
+{% block title %}{{ t_titre }}{% endblock %}
+
+{% block content %}
+<h1>{{ t_titre }}</h1>
+<p>{{ t_message }}</p>
+<form method="POST" action="">
+    {{ csrf_token }}
+    <label for="type_choisi">Sélectionnez le type de véhicule à supprimer :</label>
+    <select name="type_choisi" id="type_choisi">
+        {% for type in types_vehicules %}
+            <option value="{{ type }}">{{ type }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Supprimer</button>
+</form>
+{% endblock %}
