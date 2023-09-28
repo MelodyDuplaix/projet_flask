@@ -129,7 +129,11 @@ def f_ajout_vehicule():
 
 @app.route("/visualiser-donnees")
 def f_visualiser_donnees(): 
-    pass 
+    df_chauffeurs = recuperer_table_chauffeur()
+    taille_df_chauffeur = df_chauffeurs.shape[0]
+    table_vehicule = recuperer_table_vehicule()
+    taille_df_vehicule = table_vehicule.shape[0]
+    return render_template("t_visualiser_donnees.html", t_chauffeurs = df_chauffeurs, t_vehicule = table_vehicule, t_taille_df_chauffeur = taille_df_chauffeur, t_taille_df_vehicule=taille_df_vehicule)
 
 @app.route("/supprimer")
 def f_supprimer(): 
