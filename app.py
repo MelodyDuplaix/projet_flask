@@ -76,8 +76,7 @@ def f_formulaire_saisie():
                 t_nom = f_nom, t_prenom=f_prenom, t_type_vehicule=f_type_vehicule, t_kilometres_depart = f_kilometres_depart, t_kilometres_fin = f_kilometres_fin, 
                 t_commentaire = f_commentaire, t_id_vehicule = id_vehicule, t_id_chauffeur = id_chauffeur, t_message = f_message)
         except:
-            f_message = "Un problème est survenu pendant l'enregistrement."
-            return render_template("t_formulaire_saisie_confirmation.html", t_message = f_message)
+            return "Un problème est survenu pendant l'enregistrement, vérifier que le nom est le prénom rentrés sont bien déja enregistré en tant que chauffeur."
     return render_template("t_formulaire_saisie.html" ,
                             t_titre = "Formulaire de saisie",
                             html_formulaire = f_formulaire) 
@@ -148,3 +147,7 @@ def f_rgpd():
 @app.route("/mentions-legales")
 def mentions_legales():
     return render_template("t_mentions_legales.html")
+
+@app.errorhandler (404) 
+def page_introuvable(e): 
+	return render_template ("t_404.html" ), 404
