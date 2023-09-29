@@ -1,0 +1,62 @@
+{% extends "t_base.html" %}
+
+{% block title %}Supprimé un salarié{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+    <h1>Supprimer un salarié</h1>
+    <br>
+
+    <form method="POST" style="display: inline-block; text-align: left;">
+        {{ search_form.hidden_tag() }}
+
+        <label for="nom">Saisir le nom du salarié:</label>
+        {{ search_form.nom(size=37) }}
+        {{ search_form.submit_search() }}
+    </form>
+</div>
+
+<br>
+<br>
+
+{% if salarie_data %}
+<div style="text-align: center;">
+    <table class="table table-striped table-hover table-bordered" style="width: fit-content; margin-left: auto; margin-right: auto;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in salarie_data %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>
+                <form method="POST">
+                    {{ delete_form.hidden_tag() }}
+                    <input type="hidden" name="selected_id" value="{{ row[0] }}">
+                    {{ delete_form.submit_delete() }}
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% endblock %}

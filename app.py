@@ -236,6 +236,7 @@ class SearchForm(FlaskForm):
 # Formulaire de suppression
 class DeleteForm(FlaskForm):
     submit_delete = SubmitField('Supprimer')
+
 @app.route('/supprimer-salarie', methods=['GET', 'POST'])
 def supprimer_salarie():
     search_form = SearchForm()
