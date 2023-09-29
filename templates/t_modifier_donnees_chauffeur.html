@@ -1,0 +1,27 @@
+{% extends "t_base.html" %}
+
+{% block title %}Formulaire d'ajout d'un salarié{% endblock %}
+{% set styles = "static/css/style_global.css" %}
+
+{% block content %}
+<H1>Formulaire d'ajout d'un salarié</H1>
+<form method="POST">
+  <div class="mb-3"style="width: 20%;">
+    {{ html_formulaire.hidden_tag()}}
+    {{ html_formulaire.wtf_nom.label(class="form-label") }}
+    {{ html_formulaire.wtf_nom(class="form-control") }}
+    <br/>
+  </div>
+    <div class="mb-3"style="width: 20%;">
+    {{ html_formulaire.wtf_prenom.label(class="form-label") }}
+    {{ html_formulaire.wtf_prenom(class="form-control") }}
+    <br/>
+    <div class="mb-3"style="width: 100%;">
+      {{ html_formulaire.wtf_genre.label }}
+      {{ html_formulaire.wtf_genre(class="form-select") }}
+    </div>
+    <br/>
+    {{ html_formulaire.wtf_envoyer( class="btn btn-primary")}}
+  </div>
+</form>
+{% endblock %}

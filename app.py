@@ -1,5 +1,5 @@
 # bibliothèques pour flask
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf import FlaskForm 
 from wtforms import StringField, SubmitField, SelectField, IntegerField, validators, ValidationError
 from wtforms.validators import DataRequired
@@ -185,6 +185,8 @@ def f_visualiser_donnees():
     taille_df_vehicule = table_vehicule.shape[0]
     return render_template("t_visualiser_donnees.html", t_chauffeurs = df_chauffeurs, t_vehicule = table_vehicule, t_taille_df_chauffeur = taille_df_chauffeur, t_taille_df_vehicule=taille_df_vehicule)
 
+
+
 @app.route('/supprimer-vehicule', methods=['POST', 'GET'])
 def supprimer_vehicule():
     f_message = ""
@@ -222,9 +224,123 @@ def supprimer_vehicule():
 def f_supprimer(): 
     pass 
 
-@app.route("/modifier")
+
+
+
+
+
+# class pour contrôler le formulaire d'ajout de salarié
+class c_modifier_salarie_nom(FlaskForm):
+    # Liste des types de véhicules disponibles
+    wtf_nom = StringField("Nom", validators=[DataRequired()])
+    wtf_prenom = SelectField("Prénom", validators=[DataRequired()] )
+    wtf_envoyer = SubmitField("Envoyer")
+    def __init__(self):
+        super(c_modifier_salarie_nom, self).__init__()
+        f_nom = self.wtf_nom.data
+        # Créez la connexion à la base de données à l'intérieur de la méthode __init__
+        self.connexion = sqlite3.connect("toutroule.db")
+        self.curseur = self.connexion.cursor()
+        # Récupérez la liste des types de véhicules depuis la base de données
+        f_prenom = self.curseur.execute("SELECT prenom FROM chauffeurs WHERE nom = ?", (f_nom,))
+        f_prenom = [(resultat[0], resultat[0]) for resultat in f_prenom]
+        # Définissez les choix du champ SelectField
+        self.wtf_prenom.choices = f_prenom
+        # Fermez le curseur (vous pouvez garder la connexion ouverte si nécessaire)
+        self.curseur.close()
+
+@app.route("/modifier-chauffeur", methods=['POST', 'GET'])
 def f_modifier(): 
-    pass 
+    table_chauffeur = recuperer_table_chauffeur()
+    f_formulaire = c_modifier_salarie_nom()
+    taille_chauffeur = table_chauffeur.shape[0]
+    if f_formulaire.validate_on_submit():
+        f_nom = f_formulaire.wtf_nom.data
+        f_prenom = f_formulaire.wtf_prenom.data
+        f_formulaire.wtf_nom.data = ""
+        return redirect(f'/modifier/{f_nom}-{f_prenom}')
+    return render_template("t_table_modifier_chauffeur.html", html_formulaire = f_formulaire)
+    
+
+
+
+class c_modifier_donnees_salarie(FlaskForm):
+    # Liste des types de véhicules disponibles
+    wtf_nom = StringField("Nom", validators=[DataRequired()])
+    wtf_prenom = StringField("Prénom", validators=[DataRequired()])
+    wtf_genre = SelectField("Genre", choices=["M","F","NB"])
+    wtf_envoyer = SubmitField("Envoyer")
+
+
+@app.route("/modifier/<nom_chauffeur>", methods=['POST', 'GET'])
+def nom_chauffeur(nom_chauffeur):
+    f_nom_initial = nom_chauffeur.split("-")[0]
+    f_prenom_initial = nom_chauffeur.split("-")[1]
+    f_formulaire = c_modifier_donnees_salarie()
+    if f_formulaire.validate_on_submit():
+        f_nom = f_formulaire.wtf_nom.data
+        f_formulaire.wtf_nom.data = ""
+        f_prenom = f_formulaire.wtf_prenom.data
+        f_formulaire.wtf_prenom.data = ""
+        f_genre = f_formulaire.wtf_genre.data
+        f_formulaire.wtf_genre.data = ""
+        try:
+            connexion = sqlite3.connect("toutroule.db")
+            curseur = connexion.cursor()
+            curseur.execute("UPDATE chauffeurs SET nom=?, prenom=?, genre=? WHERE nom=? and prenom=?", (f_nom, f_prenom, f_genre, f_nom_initial,f_prenom_initial))
+            connexion.commit()
+            f_message = "Modification inscrit dans la base."
+        except Exception as e:
+            print(str(e))
+            connexion.rollback()
+            return "Un problème est survenu pendant l'enregistrement."
+        finally:
+            connexion.close()
+    return render_template("t_modifier_donnees_chauffeur.html", html_formulaire = f_formulaire)
+
+
+    
+    
+# Class pour modifier les véhicules
+class c_modifier_vehicule(FlaskForm):
+    wtf_type = SelectField("Type de véhicule", validators=[DataRequired()])
+    wtf_nouveau_type = StringField("Nouveau type de véhicule", validators=[DataRequired()])
+    wtf_envoyer = SubmitField("Envoyer")
+    def __init__(self):
+        super(c_modifier_vehicule, self).__init__()
+        # Créez la connexion à la base de données à l'intérieur de la méthode __init__
+        self.connexion = sqlite3.connect("toutroule.db")
+        self.curseur = self.connexion.cursor()
+        # Récupérez la liste des types de véhicules depuis la base de données
+        f_vehicules = self.curseur.execute("SELECT DISTINCT type FROM vehicules").fetchall()
+        # Définissez les choix du champ SelectField
+        self.wtf_type.choices = [(resultat[0], resultat[0]) for resultat in f_vehicules]
+        # Fermez le curseur (vous pouvez garder la connexion ouverte si nécessaire)
+        self.curseur.close()
+@app.route("/modifier_vehicule", methods=['POST', 'GET'])
+def f_modifier_vehicule():
+    f_formulaire = c_modifier_vehicule()
+    if f_formulaire.validate_on_submit():
+        ancien_type = f_formulaire.wtf_type.data
+        nouveau_type = f_formulaire.wtf_nouveau_type.data
+        try:
+            connexion = sqlite3.connect("toutroule.db")
+            curseur = connexion.cursor()
+            # Effectuer la mise à jour en utilisant les valeurs fournies dans le formulaire
+            curseur.execute("UPDATE vehicules SET type=? WHERE type=?", (nouveau_type, ancien_type))
+            connexion.commit()
+            return "Mise à jour réussie"
+        except Exception as e:
+            print(str(e))
+            connexion.rollback()
+            return "Un problème est survenu lors de la mise à jour"
+        finally:
+            connexion.close()
+    return render_template("t_modifier_vehicule.html", html_formulaire=f_formulaire)
+
+
+
+
 
 
 @app.route("/rgpd")

@@ -23,3 +23,4 @@ def recuperer_table_vehicule():
     connexion.commit()
     connexion.close()
     return table_vehicule
+

@@ -12,6 +12,7 @@
             <th>id_chauffeur</th>
             <th>nom</th>
             <th>prénom</th>
+            <th>genre</th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,7 @@
             <td>{{ t_chauffeurs["id_chauffeur"][num] }}</td>
             <td>{{ t_chauffeurs["nom"][num] }}</td>
             <td>{{ t_chauffeurs["prenom"][num] }}</td>
+            <td>{{t_chauffeurs["genre"][num]}}</td>
         </tr>
         {% endfor %}
     </tbody>
