@@ -44,8 +44,6 @@ def f_index():
 
 
 
-
-
 class t_Formulaire_enregistrement_informations(FlaskForm):
     wtf_nom = StringField("Nom*", validators=[validators.DataRequired()])
     wtf_prenom = StringField("Prenom*", validators=[validators.DataRequired()])
