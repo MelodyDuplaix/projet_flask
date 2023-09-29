@@ -13,7 +13,7 @@
 <body>
       <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/"><img src="static/images/logo.png" alt="logo de l'application" height="45px" style="margin: 0"> </a>
+          <a class="navbar-brand" href="/"><img src="static/images/logo.png" alt="logo de l'application" height="40px" style="margin: 0"> </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -56,5 +56,11 @@
       </nav>
     {% block content %}
     {% endblock %}
+    <nav style="position: sticky; background-color:  #f3f5f6; padding-top: 5px; padding-bottom: 5px">
+      <div style="display: flex !important; justify-content: space-around !important; align-items: center; flex-direction: row; text-align: center">
+        <a href="/rgpd" style="font-size: small; color: rgb(125, 125, 125)">RGPD</a>
+        <a href="/mentions-legales" style="font-size: small; color: rgb(125, 125, 125)">Mentions légales</a>
+      </div>
+    </nav>    
 </body>
 </html>
