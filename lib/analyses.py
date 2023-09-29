@@ -87,23 +87,25 @@ def graphique(df):
 
     df_km_parcouru = df.groupby(['type'])['km_parcouru'].sum().reset_index()
 
-
     f0ig = go.Figure([go.Bar(x=df_km_parcouru["type"], y=df_km_parcouru["km_parcouru"])])
 
-    # Ajouter une légende
-    f0ig.update_layout(legend=dict(x=0.7, y=0.9))
-
-    # Ajouter un titre # à rajouter pour centre le titre : 
+    # Ajouter un titre 
     f0ig.update_layout(title="Distance parcourue par type de véhicule",title_x=0.5)
 
     # Ajouter des couleurs différentes aux barres
     f0ig.update_traces(marker_color=["red", "green", "blue","yellow"])
 
     # Ajouter des étiquettes aux barres #à rajouter pour centrer les étiquettes : 
-    f0ig.update_traces(text=df_km_parcouru["km_parcouru"],textposition="outside")
+    f0ig.update_traces(text=df_km_parcouru["km_parcouru"],textposition="inside")
+    
+    # Personnaliser la police et la taille du texte
+    f0ig.update_traces(textfont=dict(size=18, color="white", family="Arial"))
 
     # Changer la couleur du fond du graphique
     f0ig.update_layout(plot_bgcolor="white")
+    
+    #Info-bulles
+    f0ig.update_traces(text=df_km_parcouru["km_parcouru"], textposition="inside", hoverinfo="x+y") 
     
     graph_JSON = json.dumps(f0ig, cls=plotly.utils.PlotlyJSONEncoder)
 

@@ -24,3 +24,21 @@ def recuperer_table_vehicule():
     connexion.close()
     return table_vehicule
 
+
+# Fonction pour effectuer la recherche
+def search_salarie(nom):
+    connexion = sqlite3.connect('toutroule.db')
+    curseur = connexion.cursor()
+    # Recherche des salariés par nom
+    curseur.execute("SELECT id_chauffeur, nom, prenom FROM chauffeurs WHERE nom LIKE ?", ('%' + nom + '%',))
+    salarie_data = curseur.fetchall()
+    connexion.close()
+    return salarie_data
+# Fonction pour supprimer un salarié
+def delete_salarie(id_chauffeur):
+    connexion = sqlite3.connect('toutroule.db')
+    curseur = connexion.cursor()
+    # Suppression du salarié
+    curseur.execute("DELETE FROM chauffeurs WHERE id_chauffeur=?", (id_chauffeur,))
+    connexion.commit()
+    connexion.close()

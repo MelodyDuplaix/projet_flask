@@ -1,7 +1,7 @@
 # bibliothèques pour flask
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, flash, render_template, request, redirect
 from flask_wtf import FlaskForm 
-from wtforms import StringField, SubmitField, SelectField, IntegerField, validators, ValidationError
+from wtforms import StringField, SubmitField, SelectField, IntegerField, validators
 from wtforms.validators import DataRequired
 import sqlite3
 from lib.utils import *
@@ -21,6 +21,7 @@ load_dotenv()
 app = Flask(__name__) # app est le nom du fichier obligatoirement, on lui attribuel l'objet Flask du nom du fichier
 app.config["CACHE_TYPE"] = "null"
 app.config['SECRET_KEY'] = "Ma super clé !"
+
 
 
 
@@ -187,6 +188,14 @@ def f_visualiser_donnees():
 
 
 
+
+
+
+
+
+
+
+
 @app.route('/supprimer-vehicule', methods=['POST', 'GET'])
 def supprimer_vehicule():
     f_message = ""
@@ -220,9 +229,31 @@ def supprimer_vehicule():
     return render_template("t_supprimer_vehicule.html", t_titre="Supprimer un type de véhicule", t_message=f_message, types_vehicules=types_vehicules)
 
 
-@app.route("/supprimer")
-def f_supprimer(): 
-    pass 
+# Formulaire de recherche
+class SearchForm(FlaskForm):
+    nom = StringField('Saisissez le nom du salarié', validators=[DataRequired()])
+    submit_search = SubmitField('Rechercher')
+# Formulaire de suppression
+class DeleteForm(FlaskForm):
+    submit_delete = SubmitField('Supprimer')
+@app.route('/supprimer-salarie', methods=['GET', 'POST'])
+def supprimer_salarie():
+    search_form = SearchForm()
+    delete_form = DeleteForm()
+    if search_form.validate_on_submit():
+        nom = search_form.nom.data
+        salarie_data = search_salarie(nom)
+        return render_template('t_supprimer_salarie.html', search_form=search_form, delete_form=delete_form, salarie_data=salarie_data)
+    if delete_form.validate_on_submit():
+        selected_id = request.form['selected_id']
+        delete_salarie(selected_id)
+        flash("Le salarié a été supprimé.", 'success')
+    return render_template('t_supprimer_salarie.html', search_form=search_form, delete_form=delete_form, salarie_data=None)
+
+
+
+
+
 
 
 
@@ -233,34 +264,20 @@ def f_supprimer():
 class c_modifier_salarie_nom(FlaskForm):
     # Liste des types de véhicules disponibles
     wtf_nom = StringField("Nom", validators=[DataRequired()])
-    wtf_prenom = SelectField("Prénom", validators=[DataRequired()] )
+    wtf_prenom = StringField("Prénom", validators=[DataRequired()])
     wtf_envoyer = SubmitField("Envoyer")
-    def __init__(self):
-        super(c_modifier_salarie_nom, self).__init__()
-        f_nom = self.wtf_nom.data
-        # Créez la connexion à la base de données à l'intérieur de la méthode __init__
-        self.connexion = sqlite3.connect("toutroule.db")
-        self.curseur = self.connexion.cursor()
-        # Récupérez la liste des types de véhicules depuis la base de données
-        f_prenom = self.curseur.execute("SELECT prenom FROM chauffeurs WHERE nom = ?", (f_nom,))
-        f_prenom = [(resultat[0], resultat[0]) for resultat in f_prenom]
-        # Définissez les choix du champ SelectField
-        self.wtf_prenom.choices = f_prenom
-        # Fermez le curseur (vous pouvez garder la connexion ouverte si nécessaire)
-        self.curseur.close()
 
 @app.route("/modifier-chauffeur", methods=['POST', 'GET'])
 def f_modifier(): 
-    table_chauffeur = recuperer_table_chauffeur()
     f_formulaire = c_modifier_salarie_nom()
-    taille_chauffeur = table_chauffeur.shape[0]
     if f_formulaire.validate_on_submit():
         f_nom = f_formulaire.wtf_nom.data
         f_prenom = f_formulaire.wtf_prenom.data
-        f_formulaire.wtf_nom.data = ""
         return redirect(f'/modifier/{f_nom}-{f_prenom}')
     return render_template("t_table_modifier_chauffeur.html", html_formulaire = f_formulaire)
     
+
+
 
 
 
@@ -301,6 +318,13 @@ def nom_chauffeur(nom_chauffeur):
 
     
     
+    
+    
+    
+    
+    
+    
+    
 # Class pour modifier les véhicules
 class c_modifier_vehicule(FlaskForm):
     wtf_type = SelectField("Type de véhicule", validators=[DataRequired()])
@@ -337,6 +361,13 @@ def f_modifier_vehicule():
         finally:
             connexion.close()
     return render_template("t_modifier_vehicule.html", html_formulaire=f_formulaire)
+
+
+
+
+
+
+
 
 
 
