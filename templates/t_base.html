@@ -11,25 +11,46 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
           <a class="navbar-brand" href="/">Dashboard</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-link " aria-current="page" href="/formulaire-saisie">Ajouter un trajet</a>
-              <a class="nav-link" href="/ajouter-salarie">Ajouter salarié</a>
-              <a class="nav-link" href="/ajouter-vehicule">Ajouter vehicule</a>
-              <a class="nav-link" href="/visualiser-donnees">Visualiser tables</a>
-              <a class="nav-link" href="/supprimer-vehicule">Supprimer vehicule</a>
-              <a class="nav-link" href="/modifier_vehicule">Modifier véhicules</a>
-              <a class="nav-link" href="/supprimer-salarie">Supprimer salariés</a>
-              <a class="nav-link" href="/modifier-chauffeur">Modifier chauffeurs</a>
-              <a class="nav-link" href="/rgpd">RGPD</a>
-              <a class="nav-link" href="/mentions-legales">Mentions Légales</a>
-            </div>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown" style="display: flex; justify-content:flex-end;">
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Ajouter
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/formulaire-saisie">Trajet</a></li>
+                  <li><a class="dropdown-item" href="/ajouter-salarie">Salarié</a></li>
+                  <li><a class="dropdown-item" href="/ajouter-vehicule">Véhicule</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Modifier
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/modifier_vehicule">Véhicule</a></li>
+                  <li><a class="dropdown-item" href="/modifier-chauffeur">Chauffeur</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Supprimer
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/supprimer-vehicule">Véhicule</a></li>
+                  <li><a class="dropdown-item" href="/supprimer-salarie">Chauffeur</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/visualiser-donnees">Visualiser les données</a>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
