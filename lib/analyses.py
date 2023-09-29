@@ -93,7 +93,7 @@ def graphique(df):
     f0ig.update_layout(title="Distance parcourue par type de véhicule",title_x=0.5)
 
     # Ajouter des couleurs différentes aux barres
-    f0ig.update_traces(marker_color=["red", "green", "blue","yellow"])
+    f0ig.update_traces(marker_color=['#99CC99', '#66B3FF', '#FFCC99', '#C2C2F0'])
 
     # Ajouter des étiquettes aux barres #à rajouter pour centrer les étiquettes : 
     f0ig.update_traces(text=df_km_parcouru["km_parcouru"],textposition="inside")

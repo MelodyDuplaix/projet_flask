@@ -5,50 +5,56 @@
 
 {% block content %}
 
-<h1>Affichage des données</h1>
+<h1>
 <div>
-    <p>Nombres de chauffeurs : {{ t_afficher_nombres_chauffeurs }}</p>
-    <p>Nom et prénom des chauffeurs : {{ t_afficher_nom_prenom }}</p>
+    <h1>Performance des chauffeurs</h1>
+    <div id="higth-container">
+        <div class="kpi-card">
+            <span class="card-value"> {{ t_afficher_nombres_chauffeurs }} </span>
+            <span class="card-text">Nombres de chauffeurs</span>
+        </div>
+        <div class="kpi-card ">
+            <span class="card-value"> {{ t_nb_de_km_parcouru_total }} Km</span>
+            <span class="card-text">Nombre total de km parcourus</span>
+        </div>
 
-    <table class="table table-striped table-hover table-bordered align-middle">
-        <thead>
-            <tr>
-                <th>nom</th>
-                <th>prénom</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for index, row in t_afficher_nom_prenom.iterrows() %}
-            <tr>
-                {% if row["genre"] =="F" %}
-                <td class=green>{{ row["nom"] }}</td>
-                <td class=green>{{ row["prenom"] }}</td>
-                {%endif%}
+    </div>
+
+    <div id="bottom-container ">
+
+        <div id="chart">
+            <script type='text/javascript'>
+                var graphs = {{ t_graphique | safe }};
+                Plotly.newPlot("chart", graphs, {});
+            </script>
+
+        </div>
+        <table class="table table-striped table-hover table-bordered align-middle">
+            <thead>
                 <tr>
-                {% if row["genre"] =="M" %}
-                <td class=blue>{{ row["nom"] }}</td>
-                <td class=blue>{{ row["prenom"] }}</td>
-                {%endif%}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
-    
-    
-    
-    
-    
-    
+                    <th>nom</th>
+                    <th>prénom</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in t_afficher_nom_prenom.iterrows() %}
+                <tr>
+                    {% if row["genre"] =="F" %}
+                    <td class=green>{{ row["nom"] }}</td>
+                    <td class=green>{{ row["prenom"] }}</td>
+                    {%endif%}
+                    <tr>
+                    {% if row["genre"] =="M" %}
+                    <td class=blue>{{ row["nom"] }}</td>
+                    <td class=blue>{{ row["prenom"] }}</td>
+                    {%endif%}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <p>Nombre total de km parcourus : {{ t_nb_de_km_parcouru_total }}</p>
-</div>
 
-<h1>Graphique</h1>
-<div id="chart">
-    <script type='text/javascript'>
-        var graphs = {{ t_graphique | safe }};
-        Plotly.newPlot("chart", graphs, {});
-    </script>
-</div>
+    </div>    
+
+<div id= "pied_page">
 {% endblock %}
