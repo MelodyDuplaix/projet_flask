@@ -24,6 +24,13 @@ def recuperer_table_vehicule():
     connexion.close()
     return table_vehicule
 
+def recuperer_table_trajets():
+    connexion = sqlite3.connect("toutroule.db")
+    table_trajets = pd.read_sql_query("SELECT * FROM trajets", connexion)
+    connexion.commit()
+    connexion.close()
+    return table_trajets
+
 
 # Fonction pour effectuer la recherche
 def search_salarie(nom):

@@ -46,7 +46,7 @@ def requetes_tables_transformation_dataframe():
         'commentaire'
     ])
 
-    df = calcul_km_parcouru (df)
+    df = calcul_km_parcouru(df)
     
     con.close() 
 
@@ -58,9 +58,27 @@ def requetes_tables_transformation_dataframe():
 
 #Afficher le nom et le prénom des chauffeurs
 
-def afficher_nom_prenom_chauffeurs(df):
-    df_identite = df[["nom", "prenom",'genre']].drop_duplicates()
-    return df_identite
+def afficher_nom_prenom_chauffeurs():
+    con = sqlite3.connect('toutroule.db')
+    cursor = con.cursor()
+    cursor.execute('''SELECT
+        c.id_chauffeur,
+        c.nom,
+        c.prenom,
+        c.genre
+    FROM
+        chauffeurs as c''')  
+#===============================================================
+# Récupérez toutes les lignes dans un DataFrame
+    df = pd.DataFrame(cursor.fetchall(), columns=[  
+        'id_chauffeur',
+        'nom',
+        'prenom',
+        'genre'
+    ])
+    con.close() 
+
+    return df
 
 #pour appeler la fonction c'est: afficher_nom_prenom_chauffeurs(df)
 

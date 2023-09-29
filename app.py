@@ -29,8 +29,8 @@ app.config['SECRET_KEY'] = "Ma super clé !"
 @app.route("/") # méthode qui permet de créer des pages web
 def f_index():
     df= requetes_tables_transformation_dataframe()
-    v_afficher_nombres_chauffeurs = afficher_nombre_chauffeurs(df)
-    v_afficher_nom_prenom = afficher_nom_prenom_chauffeurs(df)
+    v_afficher_nom_prenom = afficher_nom_prenom_chauffeurs()
+    v_afficher_nombres_chauffeurs = afficher_nombre_chauffeurs(v_afficher_nom_prenom)
     v_nb_de_km_parcouru_total = nb_de_km_parcouru_total(df)
     v_graphique = graphique(df)
     return render_template("t_analyses.html", t_afficher_nombres_chauffeurs = v_afficher_nombres_chauffeurs,
@@ -160,11 +160,9 @@ def f_ajouter_vehicule():
             curseur = connexion.cursor()
             curseur.execute("INSERT INTO vehicules (type) VALUES (?)", (f_type,))
             connexion.commit()
-            f_message = "Enregistrement inscrit dans la base."
         except Exception as e:
             print(str(e))
             connexion.rollback()
-            f_message = "Un problème est survenu pendant l'enregistrement."
         finally:
             connexion.close()
     return render_template("t_ajouter_vehicule.html", t_titre="Ajouter un type de véhicule", html_formulaire=f_formulaire)
@@ -184,7 +182,11 @@ def f_visualiser_donnees():
     taille_df_chauffeur = df_chauffeurs.shape[0]
     table_vehicule = recuperer_table_vehicule()
     taille_df_vehicule = table_vehicule.shape[0]
-    return render_template("t_visualiser_donnees.html", t_chauffeurs = df_chauffeurs, t_vehicule = table_vehicule, t_taille_df_chauffeur = taille_df_chauffeur, t_taille_df_vehicule=taille_df_vehicule)
+    table_trajets = requetes_tables_transformation_dataframe()
+    taille_table_trajets = table_trajets.shape[0]
+    return render_template("t_visualiser_donnees.html",
+                           t_chauffeurs = df_chauffeurs, t_vehicule = table_vehicule, t_trajets = table_trajets,
+                           t_taille_df_chauffeur = taille_df_chauffeur, t_taille_df_vehicule=taille_df_vehicule, t_taille_df_trajet = taille_table_trajets)
 
 
 

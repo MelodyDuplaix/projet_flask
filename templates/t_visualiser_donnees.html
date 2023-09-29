@@ -1,7 +1,7 @@
 {% extends "t_base.html" %}
 
 {% block title %}Visualiser les données{% endblock %}
-{% set styles = "static/css/style_error.css" %}
+{% set styles = "static/css/style_visualisation.css" %}
 
 {% block content %}
 <h1 style="text-align: center;">Visualiser les données</h1>
@@ -39,6 +39,31 @@
         <tr>
             <td>{{ t_vehicule["id_vehicule"][num] }}</td>
             <td>{{ t_vehicule["type"][num] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h2 style="text-align: center;">Tables des trajets</h2>
+<table class="table table-striped table-hover table-bordered table-defilement" style="width: fit-content; justify-content: center; margin-left: auto; margin-right: auto">
+    <thead>
+        <tr>
+            <th>nom</th>
+            <th>prenom</th>
+            <th>genre</th>
+            <th>type de véhicule</th>
+            <th>km_parcouru</th>
+            <th>commentaire</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for num in range(t_taille_df_trajet) %}
+        <tr>
+            <td>{{ t_trajets["nom"][num] }}</td>
+            <td>{{ t_trajets["prenom"][num] }}</td>
+            <td>{{ t_trajets["genre"][num] }}</td>
+            <td>{{ t_trajets["type"][num] }}</td>
+            <td>{{ t_trajets["km_parcouru"][num] }}</td>
+            <td>{{ t_trajets["commentaire"][num] }}</td>
         </tr>
         {% endfor %}
     </tbody>
